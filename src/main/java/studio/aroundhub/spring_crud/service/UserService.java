@@ -17,6 +17,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // 회원 등록 메서드
     public User registerUser(UserDto userDto){
         // 1. Dto에서 Entity로 변환
         User user = new User();
@@ -27,5 +28,15 @@ public class UserService {
 
         // 2. 변형된 Entity 저장
         return userRepository.save(user);
+    }
+
+    // 회원 조회 메서드
+    public UserDto getUserById(Long id) {
+        // 데이터베이스에서 ID에 해당하는 회원을 조회
+        User user = userRepository.findById(id)
+                // 회원이 존재하지 않을 경우 RuntimeException을 발생시킴.
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        // 조회한 User 객체를 UserDto 객체로 변환하여 반환함.
+        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
 }
